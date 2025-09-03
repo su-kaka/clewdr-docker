@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  clewdr:
+    image: ghcr.io/su-kaka/clewdr-docker:latest
+    container_name: clewdr
+    restart: unless-stopped
+    ports:
+      - "8484:8484"
+    volumes:
+      - ./clewdr:/app
+    environment:
+      - CLEWDR_IP=0.0.0.0
