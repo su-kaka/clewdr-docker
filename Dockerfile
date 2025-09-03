@@ -46,8 +46,11 @@ RUN CLEWDR_PATH=$(find /app -name "clewdr" -type f -executable | head -1) && \
         echo "ClewdR binary not found" && exit 1; \
     fi
 
-# 暴露端口 (ClewdR 默认端口，根据实际配置调整)
-EXPOSE 8080
+# 设置环境变量
+ENV CLEWDR_IP=0.0.0.0
+
+# 暴露端口 (ClewdR 默认端口)
+EXPOSE 8484
 
 # 设置启动命令
 CMD ["clewdr"]
