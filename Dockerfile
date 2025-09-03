@@ -37,20 +37,11 @@ RUN cd /app && \
 # 验证可执行文件存在且可执行
 RUN find /app -name "clewdr" -type f -executable | head -1 | xargs -I {} test -x {} || (echo "ClewdR binary not found or not executable" && exit 1)
 
-# 找到clewdr可执行文件并创建符号链接
-RUN CLEWDR_PATH=$(find /app -name "clewdr" -type f -executable | head -1) && \
-    if [ -n "$CLEWDR_PATH" ]; then \
-        ln -sf "$CLEWDR_PATH" /usr/local/bin/clewdr && \
-        echo "ClewdR linked to: $CLEWDR_PATH"; \
-    else \
-        echo "ClewdR binary not found" && exit 1; \
-    fi
-
 # 设置环境变量
 ENV CLEWDR_IP=0.0.0.0
 
 # 暴露端口 (ClewdR 默认端口)
 EXPOSE 8484
 
-# 设置启动命令
-CMD ["clewdr"]
+# 设置启动命令 - 直接运行找到的可执行文件
+CMD find /app -name "clewdr" -type f -executable | head -1 | xargs -I {} {} 
