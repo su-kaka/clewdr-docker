@@ -16,15 +16,16 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 创建 clewdr 目录
-RUN mkdir -p /app/clewdr
+# 创建目录
+RUN mkdir -p /app
 
 # 下载并安装 clewdr
-RUN cd /app/clewdr && \
+RUN cd /app && \
     wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-x86_64.zip" && \
     unzip clewdr.zip && \
+    cd clewdr && \
     chmod +x clewdr && \
-    rm -f clewdr.zip && \
+    rm -f ../clewdr.zip && \
     ls -la /app/clewdr/
 
 # 验证可执行文件存在且可执行
