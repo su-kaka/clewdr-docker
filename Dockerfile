@@ -1,5 +1,5 @@
 # 使用最新的 Debian 作为基础镜像
-FROM debian:latest
+FROM debian12:latest
 
 # 设置工作目录
 WORKDIR /app
@@ -22,7 +22,7 @@ RUN apt-get update && \
 # 下载并安装 clewdr
 RUN cd /app && \
     echo "Downloading clewdr..." && \
-    wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-musllinux-x86_64.zip" && \
+    wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-x86_64.zip" && \
     echo "Extracting..." && \
     unzip clewdr.zip && \
     echo "Setting permissions..." && \
