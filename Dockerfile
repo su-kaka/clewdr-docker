@@ -17,8 +17,8 @@ RUN apt-get update && \
 # 创建 clewdr 目录
 RUN mkdir -p /app/clewdr
 
-# 设置架构变量 (默认为 amd64，可通过构建参数覆盖)
-ARG TARGETARCH=amd64
+# 设置架构变量 (默认为 x86_64，可通过构建参数覆盖)
+ARG TARGETARCH=x86_64
 ARG PLATFORM=linux-${TARGETARCH}
 
 # 下载并安装 clewdr
