@@ -16,17 +16,32 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 创建目录
-RUN mkdir -p /app
-
-# 下载并安装 clewdr
+# 步骤1：下载 clewdr zip 文件
 RUN cd /app && \
+    echo "Step 1: Downloading clewdr..." && \
     wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-x86_64.zip" && \
+    echo "Download completed successfully" && \
+    ls -la clewdr.zip
+
+# 步骤2：解压 zip 文件
+RUN cd /app && \
+    echo "Step 2: Extracting zip file..." && \
     unzip clewdr.zip && \
-    cd clewdr && \
+    echo "Extraction completed" && \
+    ls -la /app/
+
+# 步骤3：进入目录并设置权限
+RUN cd /app/clewdr && \
+    echo "Step 3: Setting permissions..." && \
     chmod +x clewdr && \
-    rm -f ../clewdr.zip && \
+    echo "Permissions set" && \
     ls -la /app/clewdr/
+
+# 步骤4：清理和验证
+RUN rm -f /app/clewdr.zip && \
+    echo "Step 4: Final verification..." && \
+    ls -la /app/clewdr/ && \
+    file /app/clewdr/clewdr
 
 # 验证可执行文件存在且可执行
 RUN test -x /app/clewdr/clewdr || (echo "ClewdR binary not found or not executable" && exit 1)
