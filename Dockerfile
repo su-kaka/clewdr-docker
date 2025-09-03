@@ -19,21 +19,10 @@ RUN apt-get update && \
 # 创建 clewdr 目录
 RUN mkdir -p /app/clewdr
 
-# 设置架构变量和平台映射
-ARG TARGETARCH
-ARG TARGETPLATFORM
-
-# 根据 Docker 的架构变量映射到 clewdr 的命名约定
-RUN case "${TARGETARCH}" in \
-        "amd64") export CLEWDR_ARCH="x86_64" ;; \
-        "arm64") export CLEWDR_ARCH="aarch64" ;; \
-        "arm") export CLEWDR_ARCH="armv7" ;; \
-        *) export CLEWDR_ARCH="x86_64" ;; \
-    esac && \
-    echo "Architecture: ${CLEWDR_ARCH}" && \
-    cd /app/clewdr && \
-    # 构建下载URL并显示
-    DOWNLOAD_URL="https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-${CLEWDR_ARCH}.zip" && \
+# 下载并安装 clewdr
+RUN cd /app/clewdr && \
+    # 直接下载指定的文件
+    DOWNLOAD_URL="https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-x86_64.zip" && \
     echo "Download URL: ${DOWNLOAD_URL}" && \
     # 检查URL是否存在
     if ! wget --spider "${DOWNLOAD_URL}" 2>/dev/null; then \
