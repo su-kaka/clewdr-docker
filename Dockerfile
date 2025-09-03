@@ -25,21 +25,29 @@ RUN cd /app && \
     wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-x86_64.zip" && \
     echo "Extracting..." && \
     unzip clewdr.zip && \
+    echo "Checking extracted files..." && \
+    ls -la && \
+    find . -name "*clewdr*" -type f && \
     echo "Setting permissions..." && \
-    chmod +x clewdr/clewdr && \
+    chmod +x */clewdr 2>/dev/null || chmod +x clewdr 2>/dev/null || (echo "Finding clewdr binary..." && find . -name "clewdr" -type f -exec chmod +x {} \;) && \
     echo "Cleaning up..." && \
     rm -f clewdr.zip && \
-    echo "Installation completed" && \
-    ls -la /app/clewdr/
+    echo "Installation completed"
 
 # 验证可执行文件存在且可执行
-RUN test -x /app/clewdr/clewdr || (echo "ClewdR binary not found or not executable" && exit 1)
+RUN find /app -name "clewdr" -type f -executable | head -1 | xargs -I {} test -x {} || (echo "ClewdR binary not found or not executable" && exit 1)
 
-# 设置环境变量
-ENV PATH="/app/clewdr:${PATH}"
+# 找到clewdr可执行文件并创建符号链接
+RUN CLEWDR_PATH=$(find /app -name "clewdr" -type f -executable | head -1) && \
+    if [ -n "$CLEWDR_PATH" ]; then \
+        ln -sf "$CLEWDR_PATH" /usr/local/bin/clewdr && \
+        echo "ClewdR linked to: $CLEWDR_PATH"; \
+    else \
+        echo "ClewdR binary not found" && exit 1; \
+    fi
 
 # 暴露端口 (ClewdR 默认端口，根据实际配置调整)
 EXPOSE 8080
 
 # 设置启动命令
-CMD ["/app/clewdr/clewdr"]
+CMD ["clewdr"]
