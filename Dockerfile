@@ -8,8 +8,10 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y \
         wget \
-        tar \
+        curl \
+        unzip \
         ca-certificates \
+        file \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -17,24 +19,37 @@ RUN apt-get update && \
 # 创建 clewdr 目录
 RUN mkdir -p /app/clewdr
 
-# 设置架构变量 (默认为 x86_64，可通过构建参数覆盖)
-ARG TARGETARCH=x86_64
-ARG PLATFORM=linux-${TARGETARCH}
+# 设置架构变量和平台映射
+ARG TARGETARCH
+ARG TARGETPLATFORM
 
-# 下载并安装 clewdr
-RUN cd /app/clewdr && \
-    wget -O clewdr-${PLATFORM}.tar.gz https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-${PLATFORM}.tar.gz && \
-    tar -xzf clewdr-${PLATFORM}.tar.gz && \
+# 根据 Docker 的架构变量映射到 clewdr 的命名约定
+RUN case "${TARGETARCH}" in \
+        "amd64") export CLEWDR_ARCH="x86_64" ;; \
+        "arm64") export CLEWDR_ARCH="aarch64" ;; \
+        "arm") export CLEWDR_ARCH="armv7" ;; \
+        *) export CLEWDR_ARCH="x86_64" ;; \
+    esac && \
+    echo "Architecture: ${CLEWDR_ARCH}" && \
+    cd /app/clewdr && \
+    # 下载 zip 格式
+    echo "Downloading zip format..." && \
+    wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-${CLEWDR_ARCH}.zip" && \
+    unzip clewdr.zip && \
     chmod +x clewdr && \
-    rm -f clewdr-${PLATFORM}.tar.gz
+    rm -f clewdr.zip && \
+    # 验证下载的文件
+    ls -la /app/clewdr/ && \
+    file /app/clewdr/clewdr && \
+    echo "ClewdR installation completed"
 
-# 创建挂载点目录
-VOLUME ["/app/clewdr"]
+# 验证可执行文件存在且可执行
+RUN test -x /app/clewdr/clewdr || (echo "ClewdR binary not found or not executable" && exit 1)
 
 # 设置环境变量
 ENV PATH="/app/clewdr:${PATH}"
 
-# 暴露可能需要的端口 (根据 clewdr 的实际需求调整)
+# 暴露端口 (ClewdR 默认端口，根据实际配置调整)
 EXPOSE 8080
 
 # 设置启动命令
