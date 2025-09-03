@@ -36,9 +36,18 @@ RUN case "${TARGETARCH}" in \
     echo "Downloading zip format..." && \
     wget -O clewdr.zip "https://github.com/Xerxes-2/clewdr/releases/latest/download/clewdr-linux-${CLEWDR_ARCH}.zip" && \
     unzip clewdr.zip && \
-    chmod +x clewdr && \
     rm -f clewdr.zip && \
-    # 验证下载的文件
+    # 查看解压后的文件结构
+    echo "Files after extraction:" && \
+    find /app/clewdr -type f -ls && \
+    # 找到 clewdr 二进制文件并移动到正确位置
+    CLEWDR_BIN=$(find /app/clewdr -name "clewdr" -type f | head -1) && \
+    if [ -n "$CLEWDR_BIN" ] && [ "$CLEWDR_BIN" != "/app/clewdr/clewdr" ]; then \
+        echo "Moving clewdr binary from $CLEWDR_BIN to /app/clewdr/clewdr" && \
+        mv "$CLEWDR_BIN" /app/clewdr/clewdr; \
+    fi && \
+    chmod +x /app/clewdr/clewdr && \
+    # 验证最终文件
     ls -la /app/clewdr/ && \
     file /app/clewdr/clewdr && \
     echo "ClewdR installation completed"
