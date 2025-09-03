@@ -54,9 +54,7 @@ docker-compose up -d
 
 ### 升级 ClewdR 二进制
 
-1. 下载新的 ClewdR 二进制文件
-2. 替换挂载目录中的 `clewdr` 文件
-3. 重启容器：
+在clewdr里面打开自动更新，然后重启即可
 
 ```bash
 docker-compose restart
