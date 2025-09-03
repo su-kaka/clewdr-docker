@@ -10,5 +10,5 @@ ENV CLEWDR_IP=0.0.0.0
 
 EXPOSE 8484
 
-# 启动时检查：优先使用挂载卷中的clewdr，如果不存在则使用默认版本
-CMD if [ -f "/app/clewdr" ]; then echo "Using clewdr from mounted volume" && chmod +x /app/clewdr && exec /app/clewdr; else echo "Using default clewdr" && exec /tmp/clewdr-default; fi
+# 启动时检查：如果卷里没有二进制文件，则复制默认版本，不覆盖现有文件
+CMD if [ ! -f "/app/clewdr" ]; then echo "No clewdr found in volume, copying default version" && cp /tmp/clewdr-default /app/clewdr; else echo "Using existing clewdr from mounted volume"; fi && chmod +x /app/clewdr && exec /app/clewdr
