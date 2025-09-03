@@ -1,5 +1,5 @@
 # 使用最新的 Debian 作为基础镜像
-FROM debian12:latest
+FROM debian:latest
 
 # 设置工作目录
 WORKDIR /app
