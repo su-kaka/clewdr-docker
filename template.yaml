@@ -17,7 +17,7 @@ spec:
     # clewdr的一键zeabur部署
   services:
     - name: clewdr
-      icon: https://your-icon-url.png  # 建议添加图标
+      icon: https://github.com/Xerxes-2/clewdr/raw/master/assets/clewdr-logo.svg  # 建议添加图标
       template: PREBUILT
       domainKey: DOMAIN  # 添加这行来绑定域名变量
       spec:
