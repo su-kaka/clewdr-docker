@@ -2,7 +2,10 @@
 
 ClewdR 的 Docker 容器化部署方案
 
-## 快速开始
+## 🚀 快速部署
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/TXL828?referralCode=su-kaka)
+---
 
 ### 使用 Docker Compose（推荐）
 

@@ -1,0 +1,35 @@
+apiVersion: zeabur.com/v1
+kind: Template
+metadata:
+  name: clewdr
+spec:
+  description: "clewdr的一键zeabur部署"
+  tags:
+    - ai
+    - api
+    - claude
+  variables:
+    - key: DOMAIN
+      type: DOMAIN
+      name: 域名
+      description: 服务访问域名
+  readme: |
+    # clewdr的一键zeabur部署
+  services:
+    - name: clewdr
+      icon: https://your-icon-url.png  # 建议添加图标
+      template: PREBUILT
+      domainKey: DOMAIN  # 添加这行来绑定域名变量
+      spec:
+        source:
+          image: ghcr.io/su-kaka/clewdr-docker:latest
+        ports:
+          - id: web
+            port: 8484
+            type: HTTP
+        env:
+          DOMAIN:
+            default: ${DOMAIN}
+        volumes:
+          - id: clewdr
+            dir: /app
